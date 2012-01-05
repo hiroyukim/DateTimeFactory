@@ -2,7 +2,7 @@ use inc::Module::Install;
 name 'DateTimeFactory';
 all_from 'lib/DateTimeFactory.pm';
 
-# requires '';
+requires 'DateTime';
 
 tests 't/*.t';
 author_tests 'xt';
