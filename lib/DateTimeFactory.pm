@@ -9,13 +9,24 @@ use DateTime::Format::Strptime;
 
 __PACKAGE__->mk_accessors(qw/time_zone/);
 
-sub new {
+sub create {
     args my $class     => 'ClassName',
          my $time_zone => { isa => 'DateTime::TimeZone' };
 
     bless {
         time_zone => $time_zone,
     }, $class;
+}
+
+sub new {
+    my $self = shift;
+    my %args = @_;
+
+    unless( $args{time_zone} ) {
+        $args{time_zone} = $self->time_zone;
+    }
+
+    DateTime->new( %args );
 }
 
 sub now      {
@@ -46,11 +57,28 @@ __END__
 
 =head1 NAME
 
-DateTimeFactory -
+DateTimeFactory 
 
 =head1 SYNOPSIS
 
-  use DateTimeFactory;
+    use strict;
+    use warnings;
+
+    use DateTimeFactory;
+    use DateTime::TimeZone;
+    
+    my $dtf = DateTimeFactory->create({
+        time_zone => DateTime::TimeZone->new( name => 'Asia/Tokyo' )    
+    });
+
+    my $now   = $dtf->now();
+    my $today = $dtf->today();
+
+    my $dt    = $dtf->strptime({
+        string  => "2012-01-01 00:00:00",
+        pattern => "%Y-%m-%d %H:%M:%S",
+    });
+
 
 =head1 DESCRIPTION
 
